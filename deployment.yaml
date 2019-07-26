@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-db
+  labels:
+    app: payments-db
+    service: payments-db
+spec:
+  ports:
+  - port: 27017
+    name: tcp
+  selector:
+    app: payments-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments-db
+  labels:
+    app: payments-db
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-db
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: payments-db
+        version: v1
+    spec:
+      containers:
+      - name: payments-db
+        image: mongo
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-service 
+  labels:
+    app: payments
+    service: payments
+spec:
+  ports:
+  - port: 5000
+    name: http
+  selector:
+    app: payments
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payments 
+  labels:
+    app: payments
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: payments
+        version: v1
+    spec:
+      containers:
+      - name: payments
+        image: payments-service:0.0.1
+        imagePullPolicy: Never
+        env:
+        - name: DB_HOST
+          value: payments-db
+        - name: USERS_SERVICE
+          value: "users-service:5000"
+        ports:
+        - containerPort: 5000
