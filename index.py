@@ -28,7 +28,7 @@ def payments_from(userid):
   user_details = requests.get(
       'http://{}/user/{}'.format(os.environ['USERS_SERVICE'], userid))
   payment_details = {
-      'version': 'v1',
+      'version': 'v2',
       'user': user_details.json(),
       'payments': payments_list
   }
