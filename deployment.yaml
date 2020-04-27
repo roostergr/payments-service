@@ -46,7 +46,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payments
+  name: payments-v2
 spec:
   replicas: 1
   selector:
