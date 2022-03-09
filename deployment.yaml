@@ -61,8 +61,8 @@ spec:
     spec:
       containers:
       - name: payments
-        image: payments-service:v1
-        imagePullPolicy: Never
+        image: roostergr/payments-service:v1
+        imagePullPolicy: IfNotPresent
         env:
         - name: DB_HOST
           value: payments-db
